@@ -103,21 +103,22 @@ At scale $s$:
 1. Construct the $s$ offset series $y_r^{(s)}$.
 2. Estimate the pattern distribution
    $\mathbf{p}_r^{(s)}$ for every offset.
-3. Average the distributions:
 
-   ```math
-   \bar{\mathbf{p}}^{(s)}
-   =
-   \frac{1}{s}\sum_{r=1}^{s}\mathbf{p}_r^{(s)}.
-   ```
+Average the distributions:
 
-4. Calculate Shannon entropy from the averaged distribution:
+```math
+\bar{\mathbf{p}}^{(s)}
+=
+\frac{1}{s}\sum_{r=1}^{s}\mathbf{p}_r^{(s)}.
+```
 
-   ```math
-   H_{\mathrm{RCM}}^{(s)}
-   =
-   -\sum_c \bar p_c^{(s)}\ln \bar p_c^{(s)}.
-   ```
+Calculate Shannon entropy from the averaged distribution:
+
+```math
+H_{\mathrm{RCM}}^{(s)}
+=
+-\sum_c \bar p_c^{(s)}\ln \bar p_c^{(s)}.
+```
 
 This differs from the composite construction, which averages already
 calculated entropy values.

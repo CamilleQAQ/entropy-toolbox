@@ -24,7 +24,7 @@ y_i
 ```math
 z_i
 =
-\operatorname{round}\!\left(n_c y_i+\frac{1}{2}\right),
+\mathrm{round}\!\left(n_c y_i+\frac{1}{2}\right),
 \qquad
 z_i\in\{1,\ldots,n_c\}.
 ```

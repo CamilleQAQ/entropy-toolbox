@@ -93,21 +93,22 @@ H_{\mathrm{CM}}^{(s)}
 
 1. 构造 $s$ 条偏移序列 $y_r^{(s)}$。
 2. 为每个偏移估计模式分布 $\mathbf{p}_r^{(s)}$。
-3. 对分布取平均：
 
-   ```math
-   \bar{\mathbf{p}}^{(s)}
-   =
-   \frac{1}{s}\sum_{r=1}^{s}\mathbf{p}_r^{(s)}.
-   ```
+对分布取平均：
 
-4. 根据平均分布计算 Shannon 熵：
+```math
+\bar{\mathbf{p}}^{(s)}
+=
+\frac{1}{s}\sum_{r=1}^{s}\mathbf{p}_r^{(s)}.
+```
 
-   ```math
-   H_{\mathrm{RCM}}^{(s)}
-   =
-   -\sum_c \bar p_c^{(s)}\ln \bar p_c^{(s)}.
-   ```
+根据平均分布计算 Shannon 熵：
+
+```math
+H_{\mathrm{RCM}}^{(s)}
+=
+-\sum_c \bar p_c^{(s)}\ln \bar p_c^{(s)}.
+```
 
 这与复合构造不同：复合构造平均的是已经计算好的熵值。
 
