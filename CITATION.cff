@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use this toolbox, please cite the software and the papers for the methods you use."
+title: "entropy-toolbox"
+type: software
+authors:
+  - family-names: "CamilleQAQ"
+version: 0.1.0
+repository-code: "https://github.com/CamilleQAQ/entropy-toolbox"
+url: "https://github.com/CamilleQAQ/entropy-toolbox"
+keywords:
+  - entropy
+  - time series
+  - signal processing
+  - fault diagnosis
+license:
+  - BSD-3-Clause
+  - CC-BY-4.0

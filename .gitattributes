@@ -1,0 +1,8 @@
+# Line endings: store LF in the repository, check out LF everywhere.
+#
+# Without this file, `core.autocrlf=true` on Windows makes git warn on every
+# add ("LF will be replaced by CRLF ...") and leaves working copies with mixed
+# endings, even though the index already stores LF for every tracked file.
+# `text=auto` still lets git detect binary files; `eol=lf` pins the checkout
+# side so the working tree matches the index byte for byte.
+* text=auto eol=lf
