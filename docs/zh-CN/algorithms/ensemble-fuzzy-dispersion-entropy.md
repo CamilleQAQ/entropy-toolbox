@@ -19,21 +19,21 @@
 
 对每种映射 $q$，计算[模糊散布熵](fuzzy-dispersion-entropy.md)中介绍的模糊散布模式分布 $\mathbf{p}^{(q)}$。逐元素组合四个分布：
 
-$$
+```math
 \bar{\mathbf{p}}
 =
 \frac{1}{4}
 \sum_{q=1}^{4}\mathbf{p}^{(q)}.
-$$
+```
 
 计算
 
-$$
+```math
 H_{\mathrm{EFuDE}}
 =
 -\sum_{\pi:\bar p(\pi)>0}
 \bar p(\pi)\ln\bar p(\pi).
-$$
+```
 
 多尺度变体采用不同构造：
 

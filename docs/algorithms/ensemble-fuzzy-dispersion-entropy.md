@@ -28,21 +28,21 @@ $\mathbf{p}^{(q)}$ described in
 [Fuzzy dispersion entropy](fuzzy-dispersion-entropy.md). Combine the four
 distributions component by component:
 
-$$
+```math
 \bar{\mathbf{p}}
 =
 \frac{1}{4}
 \sum_{q=1}^{4}\mathbf{p}^{(q)}.
-$$
+```
 
 Calculate
 
-$$
+```math
 H_{\mathrm{EFuDE}}
 =
 -\sum_{\pi:\bar p(\pi)>0}
 \bar p(\pi)\ln\bar p(\pi).
-$$
+```
 
 The multiscale variants then apply different constructions:
 

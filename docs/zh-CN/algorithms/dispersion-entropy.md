@@ -12,38 +12,38 @@
 
 估计信号均值 $\mu$ 和样本标准差 $\sigma$，使用正态累积分布函数映射每个样本：
 
-$$
+```math
 y_i
 =
 \Phi\!\left(\frac{x_i-\mu}{\sigma}\right),
 \qquad 0\le y_i\le1.
-$$
+```
 
 将映射值转换为类别：
 
-$$
+```math
 z_i
 =
 \operatorname{round}\!\left(n_c y_i+\frac{1}{2}\right),
 \qquad
 z_i\in\{1,\ldots,n_c\}.
-$$
+```
 
 构造延迟散布模式：
 
-$$
+```math
 \mathbf{z}_i^{(m,\tau)}
 =
 (z_i,z_{i+\tau},\ldots,z_{i+(m-1)\tau}).
-$$
+```
 
 最多有 $n_c^m$ 种可能模式。根据观测到的相对频率 $p(\pi)$，计算
 
-$$
+```math
 H_{\mathrm{DE}}
 =
 -\sum_{\pi:p(\pi)>0}p(\pi)\ln p(\pi).
-$$
+```
 
 多尺度变体将该估计器与不同构造组合：
 

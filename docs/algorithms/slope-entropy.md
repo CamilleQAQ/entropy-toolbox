@@ -15,13 +15,13 @@ of those symbols.
 
 For consecutive differences
 
-$$
+```math
 d_i=x_{i+1}-x_i,
-$$
+```
 
 assign
 
-$$
+```math
 s_i=
 \begin{cases}
 0, & -\delta\le d_i\le\delta,\\
@@ -30,17 +30,17 @@ s_i=
 -1, & -\gamma\le d_i<-\delta,\\
 -2, & d_i<-\gamma.
 \end{cases}
-$$
+```
 
 Create overlapping patterns containing $m-1$ consecutive symbols. If
 $p(\mathbf{s})$ is the relative frequency of a symbol pattern, calculate
 
-$$
+```math
 H_{\mathrm{SlopEn}}
 =
 -\sum_{\mathbf{s}:p(\mathbf{s})>0}
 p(\mathbf{s})\ln p(\mathbf{s}).
-$$
+```
 
 MSlopEn applies this estimator to standard coarse-grained signals.
 TSMSlopEn calculates it for every time-shift phase and averages the values.

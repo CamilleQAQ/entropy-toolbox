@@ -12,13 +12,13 @@
 
 对相邻差分
 
-$$
+```math
 d_i=x_{i+1}-x_i,
-$$
+```
 
 按下式分配符号：
 
-$$
+```math
 s_i=
 \begin{cases}
 0, & -\delta\le d_i\le\delta,\\
@@ -27,16 +27,16 @@ s_i=
 -1, & -\gamma\le d_i<-\delta,\\
 -2, & d_i<-\gamma.
 \end{cases}
-$$
+```
 
 建立由 $m-1$ 个连续符号组成的重叠模式。若 $p(\mathbf{s})$ 是符号模式的相对频率，则计算
 
-$$
+```math
 H_{\mathrm{SlopEn}}
 =
 -\sum_{\mathbf{s}:p(\mathbf{s})>0}
 p(\mathbf{s})\ln p(\mathbf{s}).
-$$
+```
 
 MSlopEn 将该估计器应用于标准粗粒化信号。TSMSlopEn 对每个时间移位相位计算该估计器，并平均各相位结果。
 

@@ -17,13 +17,13 @@ boundary do not necessarily switch one pattern completely into another.
 Map each sample through the normal cumulative distribution function and place
 it on the continuous class axis:
 
-$$
+```math
 y_i
 =
 \Phi\!\left(\frac{x_i-\mu}{\sigma}\right),
 \qquad
 z_i=n_c y_i+\frac{1}{2}.
-$$
+```
 
 For each class $c\in\{1,\ldots,n_c\}$, calculate a membership
 $u_c(z_i)\in[0,1]$. Interior classes use triangular membership functions;
@@ -31,40 +31,40 @@ the first and last classes use trapezoidal boundary functions.
 
 For a class pattern
 
-$$
+```math
 \pi=(c_1,c_2,\ldots,c_m),
-$$
+```
 
 the membership of the delayed window beginning at $i$ is
 
-$$
+```math
 U_i(\pi)
 =
 \prod_{j=0}^{m-1}
 u_{c_{j+1}}\!\left(z_{i+j\tau}\right).
-$$
+```
 
 With
 
-$$
+```math
 W=N-(m-1)\tau
-$$
+```
 
 complete windows, estimate the fuzzy pattern distribution:
 
-$$
+```math
 p(\pi)
 =
 \frac{1}{W}\sum_{i=1}^{W}U_i(\pi).
-$$
+```
 
 Finally,
 
-$$
+```math
 H_{\mathrm{FuDE}}
 =
 -\sum_{\pi:p(\pi)>0}p(\pi)\ln p(\pi).
-$$
+```
 
 The registered methods use this estimator as follows:
 

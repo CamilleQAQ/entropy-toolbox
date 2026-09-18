@@ -16,11 +16,11 @@ change the pattern order when no ties are introduced.
 For a signal $x=(x_1,\ldots,x_N)$, embedding dimension $m$, and delay
 $\tau$, form
 
-$$
+```math
 \mathbf{x}_i^{(m,\tau)}
 =
 (x_i,x_{i+\tau},\ldots,x_{i+(m-1)\tau}),
-$$
+```
 
 for every complete window.
 
@@ -28,20 +28,20 @@ Replace each window by the permutation $\pi$ that sorts its samples in
 ascending order. Equal values retain their original order. If $c(\pi)$ is the
 number of observed windows with pattern $\pi$, estimate
 
-$$
+```math
 p(\pi)
 =
 \frac{c(\pi)}
 {N-(m-1)\tau}.
-$$
+```
 
 The toolbox returns the unnormalized natural-log entropy
 
-$$
+```math
 H_{\mathrm{PE}}
 =
 -\sum_{\pi:p(\pi)>0}p(\pi)\ln p(\pi).
-$$
+```
 
 MPE applies this estimator to the standard coarse-grained series. TSMPE
 applies it to every phase at each time-shift scale and averages the phase

@@ -4,9 +4,9 @@ English | [简体中文](../zh-CN/algorithms/multiscale-constructions.md)
 
 Let the input signal be
 
-$$
+```math
 x = (x_1,x_2,\ldots,x_N).
-$$
+```
 
 The toolbox combines a single-scale entropy estimator with one of four ways
 of representing the signal at increasing scales.
@@ -22,14 +22,14 @@ length $s$ by their means.
 
 At scale $s$, construct
 
-$$
+```math
 y_j^{(s)}
 =
 \frac{1}{s}
 \sum_{i=(j-1)s+1}^{js}x_i,
 \qquad
 j=1,\ldots,\left\lfloor\frac{N}{s}\right\rfloor.
-$$
+```
 
 Samples at the end that do not complete a block are discarded. Apply the
 selected single-scale entropy estimator to $y^{(s)}$ and repeat for
@@ -45,9 +45,9 @@ $s=1,\ldots,S$.
 
 The output is
 
-$$
+```math
 (H^{(1)},H^{(2)},\ldots,H^{(S)}),
-$$
+```
 
 where element `i` of the Python array corresponds to scientific scale
 `i + 1`.
@@ -63,20 +63,20 @@ only the first block alignment.
 
 For scale $s$ and offset $r=1,\ldots,s$, construct
 
-$$
+```math
 y_{r,j}^{(s)}
 =
 \frac{1}{s}
 \sum_{i=0}^{s-1}x_{r+(j-1)s+i}.
-$$
+```
 
 Calculate one entropy value $H_r^{(s)}$ for each offset and average them:
 
-$$
+```math
 H_{\mathrm{CM}}^{(s)}
 =
 \frac{1}{s}\sum_{r=1}^{s}H_r^{(s)}.
-$$
+```
 
 ### Parameter meanings
 
@@ -105,19 +105,19 @@ At scale $s$:
    $\mathbf{p}_r^{(s)}$ for every offset.
 3. Average the distributions:
 
-   $$
+   ```math
    \bar{\mathbf{p}}^{(s)}
    =
    \frac{1}{s}\sum_{r=1}^{s}\mathbf{p}_r^{(s)}.
-   $$
+   ```
 
 4. Calculate Shannon entropy from the averaged distribution:
 
-   $$
+   ```math
    H_{\mathrm{RCM}}^{(s)}
    =
    -\sum_c \bar p_c^{(s)}\ln \bar p_c^{(s)}.
-   $$
+   ```
 
 This differs from the composite construction, which averages already
 calculated entropy values.
@@ -144,20 +144,20 @@ at interval $k$.
 
 For phase $\beta=1,\ldots,k$, construct
 
-$$
+```math
 x_{\beta}^{(k)}
 =
 (x_\beta,x_{\beta+k},x_{\beta+2k},\ldots).
-$$
+```
 
 Calculate the selected entropy for every phase and average:
 
-$$
+```math
 H_{\mathrm{TSM}}^{(k)}
 =
 \frac{1}{k}
 \sum_{\beta=1}^{k}H\!\left(x_\beta^{(k)}\right).
-$$
+```
 
 ### Parameter meanings
 

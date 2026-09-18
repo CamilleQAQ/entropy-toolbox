@@ -15,39 +15,39 @@ permutation entropy, amplitude location affects the assigned pattern.
 Estimate the signal mean $\mu$ and sample standard deviation $\sigma$. Map
 each sample with the normal cumulative distribution function:
 
-$$
+```math
 y_i
 =
 \Phi\!\left(\frac{x_i-\mu}{\sigma}\right),
 \qquad 0\le y_i\le1.
-$$
+```
 
 Convert the mapped value to a class
 
-$$
+```math
 z_i
 =
 \operatorname{round}\!\left(n_c y_i+\frac{1}{2}\right),
 \qquad
 z_i\in\{1,\ldots,n_c\}.
-$$
+```
 
 Form delayed dispersion patterns
 
-$$
+```math
 \mathbf{z}_i^{(m,\tau)}
 =
 (z_i,z_{i+\tau},\ldots,z_{i+(m-1)\tau}).
-$$
+```
 
 There are at most $n_c^m$ possible patterns. From their observed relative
 frequencies $p(\pi)$, calculate
 
-$$
+```math
 H_{\mathrm{DE}}
 =
 -\sum_{\pi:p(\pi)>0}p(\pi)\ln p(\pi).
-$$
+```
 
 The multiscale variants combine this estimator with different constructions:
 

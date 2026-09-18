@@ -12,52 +12,52 @@
 
 通过正态累积分布函数映射每个样本，并将其放到连续类别轴上：
 
-$$
+```math
 y_i
 =
 \Phi\!\left(\frac{x_i-\mu}{\sigma}\right),
 \qquad
 z_i=n_c y_i+\frac{1}{2}.
-$$
+```
 
 对于每个类别 $c\in\{1,\ldots,n_c\}$，计算隶属度 $u_c(z_i)\in[0,1]$。中间类别使用三角隶属函数，首尾类别使用梯形边界函数。
 
 对于类别模式
 
-$$
+```math
 \pi=(c_1,c_2,\ldots,c_m),
-$$
+```
 
 从 $i$ 开始的延迟窗口对该模式的隶属度为
 
-$$
+```math
 U_i(\pi)
 =
 \prod_{j=0}^{m-1}
 u_{c_{j+1}}\!\left(z_{i+j\tau}\right).
-$$
+```
 
 完整窗口数为
 
-$$
+```math
 W=N-(m-1)\tau,
-$$
+```
 
 由此估计模糊模式分布：
 
-$$
+```math
 p(\pi)
 =
 \frac{1}{W}\sum_{i=1}^{W}U_i(\pi).
-$$
+```
 
 最后计算
 
-$$
+```math
 H_{\mathrm{FuDE}}
 =
 -\sum_{\pi:p(\pi)>0}p(\pi)\ln p(\pi).
-$$
+```
 
 已注册方法按以下方式使用该估计器：
 
