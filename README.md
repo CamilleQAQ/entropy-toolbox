@@ -3,7 +3,7 @@
 English | [简体中文](README.zh-CN.md)
 
 `msentropy` computes single-scale and multiscale entropy features from
-one-dimensional signals with NumPy and SciPy. It provides 15 related methods
+one-dimensional signals with NumPy and SciPy. It provides 20 multiscale methods
 behind one high-level interface, while keeping the validated numerical
 implementations available for reproduction work.
 
@@ -60,7 +60,7 @@ Start with the [getting-started guide](docs/getting-started.md), then use the
 parameter meanings, and output interpretation are collected in the
 [algorithm guide](docs/algorithms/index.md). A runnable version of the basic
 example is in [`examples/quickstart.py`](examples/quickstart.py); the
-separate [`examples/all_methods.py`](examples/all_methods.py) runs all 15
+separate [`examples/all_methods.py`](examples/all_methods.py) runs all 20
 methods.
 
 ## Choosing an interface

@@ -4,8 +4,8 @@ For valid inputs, the high-level API resolves the method name, validates
 common mistakes, normalizes input orientation, and forwards parameters to the
 compatibility function without changing the calculation. These tests check:
 
-- structural facts about the registry (15 methods, paper order, parameter
-  lists that match the faithful signatures by introspection, so the two
+- structural facts about the registry (20 multiscale methods and parameter
+  lists that match the numerical signatures by introspection, so the two
   layers cannot drift apart silently);
 - bit-for-bit agreement with the compatibility API on valid inputs;
 - readable rejection of invalid high-level inputs.
@@ -13,7 +13,7 @@ compatibility function without changing the calculation. These tests check:
 One deliberate difference from the compatibility API — a ``(N, 1)`` column
 input is normalized to the row convention instead of taking the MATLAB
 column path — is pinned explicitly in
-``test_column_is_normalized_where_the_faithful_layer_differs``.
+``test_column_is_normalized_where_the_compatibility_api_differs``.
 """
 
 import inspect
@@ -28,11 +28,16 @@ from msentropy.core.cmfude import cmfude
 from msentropy.core.mde import mde
 from msentropy.core.mefude import mefude
 from msentropy.core.mfude import mfude
+from msentropy.core.mfe_mu import mfe_mu
 from msentropy.core.mpe import mpe
 from msentropy.core.mslopen import mslopen
+from msentropy.core.mse_mu import mse_mu
+from msentropy.core.multiscale_attention_entropy import multiscale_attention_entropy
 from msentropy.core.rcmde import rcmde
 from msentropy.core.rcmefude import rcmefude
 from msentropy.core.rcmfude import rcmfude
+from msentropy.core.rcmpe import rcmpe
+from msentropy.core.rcmslopen import rcmslopen
 from msentropy.core.tsmde import tsmde
 from msentropy.core.tsmefude import tsmefude
 from msentropy.core.tsmfude import tsmfude
@@ -61,7 +66,17 @@ PAPER_METHODS = (
     "TSMEFuDE",
 )
 
-#: Method -> (API keywords, positional arguments of the faithful function).
+ADDITIONAL_METHODS = (
+    "MSE",
+    "MFE",
+    "MAttEn",
+    "RCMPE",
+    "RCMSlopEn",
+)
+
+ALL_METHODS = PAPER_METHODS + ADDITIONAL_METHODS
+
+#: Method -> (API keywords, positional arguments, direct numerical function).
 #: Small parameters keep the suite in the millisecond range; the wrapper's
 #: arithmetic is independent of the parameter values.
 CASE_SPECS = {
@@ -80,6 +95,11 @@ CASE_SPECS = {
     "TSMDE": (dict(m=3, nc=6, tau=2, kmax=3), (3, 6, 2, 3), tsmde),
     "TSMFuDE": (dict(m=3, nc=6, tau=2, kmax=3), (3, 6, 2, 3), tsmfude),
     "TSMEFuDE": (dict(m=3, nc=6, tau=2, kmax=3), (3, 6, 2, 3), tsmefude),
+    "MSE": (dict(m=2, r=0.2, tau=1, scale=3), (2, 0.2, 1, 3), mse_mu),
+    "MFE": (dict(m=2, r=0.2, n=2.0, tau=1, scale=3), (2, 0.2, 2.0, 1, 3), mfe_mu),
+    "MAttEn": (dict(scale=3), (3,), multiscale_attention_entropy),
+    "RCMPE": (dict(m=3, tau=2, scale=3), (3, 2, 3), rcmpe),
+    "RCMSlopEn": (dict(m=3, delta=0.1, gamma=1.0, scale=3), (3, 0.1, 1.0, 3), rcmslopen),
 }
 
 #: The five parameters of the paper's parameter sweep, used by the smoke test.
@@ -99,6 +119,11 @@ SWEEP_PARAMS = {
     "TSMDE": dict(m=3, nc=6, tau=1, kmax=5),
     "TSMFuDE": dict(m=3, nc=6, tau=1, kmax=5),
     "TSMEFuDE": dict(m=3, nc=6, tau=1, kmax=5),
+    "MSE": dict(m=2, r=0.2, tau=1, scale=5),
+    "MFE": dict(m=2, r=0.2, n=2.0, tau=1, scale=5),
+    "MAttEn": dict(scale=5),
+    "RCMPE": dict(m=3, tau=1, scale=5),
+    "RCMSlopEn": dict(m=3, delta=0.1, gamma=1.0, scale=5),
 }
 
 
@@ -116,40 +141,37 @@ def _bit_equal(actual: np.ndarray, expected: np.ndarray) -> bool:
 # --------------------------------------------------------------------------
 
 
-def test_registry_holds_exactly_the_fifteen_paper_methods():
-    assert msentropy.list_methods() == PAPER_METHODS
-    assert len(msentropy.list_methods()) == 15
-    assert set(api.PARAMETERS) == set(PAPER_METHODS)
+def test_registry_holds_all_supported_multiscale_methods():
+    assert msentropy.list_methods() == ALL_METHODS
+    assert len(msentropy.list_methods()) == 20
+    assert set(api.PARAMETERS) == set(ALL_METHODS)
 
 
-def test_list_methods_is_in_paper_table_order():
-    """The order follows the project reference-study table."""
-    assert msentropy.list_methods()[:3] == ("MPE", "MSlopEn", "MDE")
-    assert msentropy.list_methods()[-1] == "TSMEFuDE"
+def test_existing_order_is_preserved_and_toolbox_methods_are_appended():
+    assert msentropy.list_methods()[:15] == PAPER_METHODS
+    assert msentropy.list_methods()[15:] == ADDITIONAL_METHODS
 
 
-@pytest.mark.parametrize("name", PAPER_METHODS)
-def test_parameters_match_the_faithful_signature(name):
-    """No drift: the registry's parameter list IS the faithful signature.
+@pytest.mark.parametrize("name", ALL_METHODS)
+def test_parameters_match_the_numerical_signature(name):
+    """Keep registry parameters aligned with the numerical signature.
 
     Built by introspection, minus the arguments the API pins (the inert
     ``type_``), with the MATLAB spelling of an aliased argument replaced by
     its canonical API name.
     """
     spec = msentropy.get_method(name)
-    faithful_names = [
-        p for p in inspect.signature(spec.function).parameters if p != "x"
-    ]
+    direct_names = list(inspect.signature(spec.function).parameters)[1:]
     expected = tuple(
-        spec.aliases.get(faithful, faithful)
-        for faithful in faithful_names
-        if faithful not in spec.fixed
+        spec.aliases.get(direct_name, direct_name)
+        for direct_name in direct_names
+        if direct_name not in spec.fixed
     )
     assert spec.parameters == expected
     assert api.PARAMETERS[name] == expected
 
 
-@pytest.mark.parametrize("name", PAPER_METHODS)
+@pytest.mark.parametrize("name", ALL_METHODS)
 def test_signature_property_documents_the_call(name):
     spec = msentropy.get_method(name)
     text = spec.signature
@@ -165,16 +187,16 @@ def test_signature_property_documents_the_call(name):
 # --------------------------------------------------------------------------
 
 
-@pytest.mark.parametrize("name", PAPER_METHODS)
-def test_compute_is_bit_identical_to_the_faithful_layer(name):
+@pytest.mark.parametrize("name", ALL_METHODS)
+def test_compute_is_bit_identical_to_the_numerical_function(name):
     """Same value, same shape, same -0 sign bit, same NaN positions."""
-    kwargs, args, faithful = CASE_SPECS[name]
-    unified = msentropy.compute(name, SIGNAL, **kwargs)
-    direct = faithful(SIGNAL, *args)
-    assert _bit_equal(unified, direct)
+    kwargs, args, direct_fn = CASE_SPECS[name]
+    api_result = msentropy.compute(name, SIGNAL, **kwargs)
+    direct = direct_fn(SIGNAL, *args)
+    assert _bit_equal(api_result, direct)
 
 
-@pytest.mark.parametrize("name", PAPER_METHODS)
+@pytest.mark.parametrize("name", ALL_METHODS)
 def test_all_methods_run_on_one_signal(name):
     """Integration smoke test: every method returns a finite curve here."""
     x = np.random.default_rng(7).standard_normal(512)
@@ -186,11 +208,11 @@ def test_all_methods_run_on_one_signal(name):
 
 @pytest.mark.parametrize("name", ["MFuDE", "CMFuDE", "RCMFuDE"])
 def test_type_defaults_to_zero_where_the_reference_reads_it(name):
-    kwargs, args, faithful = CASE_SPECS[name]
+    kwargs, args, direct_fn = CASE_SPECS[name]
     assert msentropy.get_method(name).defaults == {"type_": 0}
     assert _bit_equal(
         msentropy.compute(name, SIGNAL, **kwargs),
-        faithful(SIGNAL, *args),  # args end with the explicit type_ = 0
+        direct_fn(SIGNAL, *args),  # args end with the explicit type_ = 0
     )
 
 
@@ -232,7 +254,7 @@ def test_unknown_method_lists_the_valid_names():
         msentropy.compute("MDA", SIGNAL, m=3, nc=6, tau=1, scale=3)
     message = str(excinfo.value)
     assert "'MDA'" in message
-    for name in PAPER_METHODS:
+    for name in ALL_METHODS:
         assert name in message
 
 
@@ -273,7 +295,7 @@ def test_matlab_spelling_of_the_delay_is_accepted_for_mpe():
     )
 
 
-@pytest.mark.parametrize("name", ["MSlopEn", "TSMSlopEn"])
+@pytest.mark.parametrize("name", ["MSlopEn", "TSMSlopEn", "RCMSlopEn"])
 def test_gamma_is_canonical_and_gama_remains_an_alias(name):
     spec = msentropy.get_method(name)
     assert "gamma" in spec.parameters
@@ -329,7 +351,7 @@ def test_unknown_parameter_message_mentions_aliases_when_present():
 # --------------------------------------------------------------------------
 
 
-@pytest.mark.parametrize("name", PAPER_METHODS)
+@pytest.mark.parametrize("name", ALL_METHODS)
 def test_1d_row_and_column_inputs_agree_through_the_api(name):
     kwargs = CASE_SPECS[name][0]
     flat = msentropy.compute(name, SIGNAL, **kwargs)
@@ -347,11 +369,11 @@ def test_column_is_normalized_where_the_compatibility_api_differs(name):
     (N, 1) input. The high-level API always takes the row-vector path, so it
     must not reproduce that column value; the compatibility API retains it.
     """
-    kwargs, args, faithful = CASE_SPECS[name]
+    kwargs, args, direct_fn = CASE_SPECS[name]
     column = SIGNAL.reshape(-1, 1)
-    assert not _bit_equal(faithful(column, *args), faithful(SIGNAL, *args))
+    assert not _bit_equal(direct_fn(column, *args), direct_fn(SIGNAL, *args))
     assert _bit_equal(
-        msentropy.compute(name, column, **kwargs), faithful(SIGNAL, *args)
+        msentropy.compute(name, column, **kwargs), direct_fn(SIGNAL, *args)
     )
 
 
@@ -407,6 +429,9 @@ def test_as_signal_does_not_silently_clean_nan():
         ("TSMDE", dict(m=3, nc=6, tau=1, kmax=0), "kmax"),
         ("MSlopEn", dict(m=3, delta=-0.1, gamma=1.0, scale=3), "delta"),
         ("MSlopEn", dict(m=3, delta=0.2, gamma=0.1, scale=3), "gamma"),
+        ("RCMSlopEn", dict(m=6, delta=0.1, gamma=1.0, scale=3), "m"),
+        ("MSE", dict(m=2, r=0.0, tau=1, scale=3), "r"),
+        ("MFE", dict(m=2, r=0.2, n=0.0, tau=1, scale=3), "n"),
     ],
 )
 def test_invalid_parameter_values_are_rejected(name, kwargs, parameter):
@@ -438,6 +463,12 @@ def test_largest_scale_must_leave_a_complete_embedding_window():
     assert "longer signal" in message
 
 
+def test_attention_entropy_scale_must_leave_three_samples():
+    with pytest.raises(ValueError) as excinfo:
+        msentropy.compute("MAttEn", SIGNAL, scale=32)
+    assert "at least 3 samples" in str(excinfo.value)
+
+
 def test_compatibility_functions_retain_degenerate_scale_behavior():
     assert mpe(SIGNAL, 3, 1, 0).shape == (0,)
     direct = mefude(SIGNAL, 3, 6, 1, 0, 0)
@@ -446,7 +477,7 @@ def test_compatibility_functions_retain_degenerate_scale_behavior():
 
 
 def test_output_is_always_a_1d_float64_ndarray():
-    for name in ("MDE", "TSMEFuDE"):
+    for name in ("MDE", "TSMEFuDE", "MSE", "MAttEn"):
         out = msentropy.compute(name, SIGNAL, **CASE_SPECS[name][0])
         assert isinstance(out, np.ndarray)
         assert out.ndim == 1
@@ -462,14 +493,14 @@ def test_package_exports_both_layers():
     """Top level exports registry helpers plus direct compatibility functions."""
     for name in ("compute", "list_methods", "get_method", "as_signal", "PARAMETERS"):
         assert name in msentropy.__all__
-    for method_name in PAPER_METHODS:
+    for method_name in ALL_METHODS:
         spec = msentropy.get_method(method_name)
         function_name = spec.function.__name__
         assert function_name in msentropy.__all__
         assert getattr(msentropy, function_name) is spec.function
 
 
-def test_faithful_functions_are_re_exported_unchanged():
-    """``msentropy.mde`` is the faithful function, not an API wrapper."""
+def test_numerical_functions_are_re_exported_unchanged():
+    """``msentropy.mde`` is the numerical function, not an API wrapper."""
     assert msentropy.mde is mde
     assert msentropy.tsmslopen is tsmslopen

@@ -11,8 +11,10 @@ number.
 
 | Family | Registered methods | What is encoded | Practical distinction |
 |---|---|---|---|
-| [Permutation](algorithms/permutation-entropy.md) | MPE, TSMPE | Relative ordering of samples | Focuses on ordinal patterns rather than their absolute amplitudes. |
-| [Slope](algorithms/slope-entropy.md) | MSlopEn, TSMSlopEn | Quantized changes between consecutive samples | Uses amplitude-dependent `delta` and `gamma` thresholds; scaling the signal changes their meaning. |
+| [Permutation](algorithms/permutation-entropy.md) | MPE, RCMPE, TSMPE | Relative ordering of samples | Focuses on ordinal patterns rather than their absolute amplitudes. |
+| [Slope](algorithms/slope-entropy.md) | MSlopEn, RCMSlopEn, TSMSlopEn | Quantized changes between consecutive samples | Uses amplitude-dependent `delta` and `gamma` thresholds; scaling the signal changes their meaning. |
+| [Sample and fuzzy](algorithms/sample-fuzzy-entropy.md) | MSE, MFE | Similarity of embedded templates | Uses a tolerance `r`; MFE replaces the hard match with a fuzzy membership controlled by `n`. |
+| [Attention](algorithms/attention-entropy.md) | MAttEn | Intervals between local extrema | Requires detectable maxima and minima at every requested scale. |
 | [Dispersion](algorithms/dispersion-entropy.md) | MDE, RCMDE, TSMDE | Amplitudes mapped into `nc` discrete classes | A direct starting point when amplitude-distribution patterns are of interest. |
 | [Fuzzy dispersion](algorithms/fuzzy-dispersion-entropy.md) | MFuDE, CMFuDE, RCMFuDE, TSMFuDE | Fuzzy memberships of dispersion patterns | Replaces hard class boundaries with fuzzy membership. |
 | [Ensemble fuzzy dispersion](algorithms/ensemble-fuzzy-dispersion-entropy.md) | MEFuDE, CMEFuDE, RCMEFuDE, TSMEFuDE | An ensemble of fuzzy mappings | Combines multiple mappings; constant or nearly constant signals require particular care. |
@@ -38,6 +40,10 @@ Full definitions and formulas are in
 - Use **MSlopEn** when the sign and magnitude category of local changes is the
   intended representation. Choose its thresholds in the units of the
   preprocessed signal.
+- Use **MSE** for the conventional multiscale sample-entropy construction, or
+  **MFE** when a smooth fuzzy similarity replaces the hard match threshold.
+- Use **MAttEn** when the timing of local extrema is the intended signal
+  representation. It is unsuitable for monotone or nearly featureless segments.
 - Consider **CM** or **RCM** variants when the scientific method calls for
   composite coarse-graining. They are not drop-in numerical replacements for
   their standard multiscale counterparts.
@@ -69,3 +75,8 @@ cite the relevant definition from [Scientific references](references.md).
 | TSMDE | Time-Shift Multiscale Dispersion Entropy | `m`, `nc`, `tau`, `kmax` |
 | TSMFuDE | Time-Shift Multiscale Fuzzy Dispersion Entropy | `m`, `nc`, `tau`, `kmax` |
 | TSMEFuDE | Time-Shift Multiscale Ensemble Fuzzy Dispersion Entropy | `m`, `nc`, `tau`, `kmax` |
+| MSE | Multiscale Sample Entropy | `m`, `r`, `tau`, `scale` |
+| MFE | Multiscale Fuzzy Entropy | `m`, `r`, `n`, `tau`, `scale` |
+| MAttEn | Multiscale Attention Entropy | `scale` |
+| RCMPE | Refined Composite Multiscale Permutation Entropy | `m`, `tau`, `scale` |
+| RCMSlopEn | Refined Composite Multiscale Slope Entropy | `m`, `delta`, `gamma`, `scale` |

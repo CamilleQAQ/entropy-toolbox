@@ -30,6 +30,6 @@ def coarse_grain(data: ArrayLike, scale: int) -> np.ndarray:
 
 
 def time_shift_phases(signal: ArrayLike, k: int) -> list[np.ndarray]:
-    """Phase subseries of time-shift scale ``k``, corrected paper definition."""
+    """Return the phase subseries for time-shift scale ``k``."""
     signal = np.asarray(signal, dtype=np.float64).ravel()
     return [signal[b::k] for b in range(k)]

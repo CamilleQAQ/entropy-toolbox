@@ -2,7 +2,7 @@
 
 English | [简体中文](../zh-CN/algorithms/permutation-entropy.md)
 
-Implemented multiscale methods: **MPE** and **TSMPE**.
+Implemented multiscale methods: **MPE**, **RCMPE**, and **TSMPE**.
 
 ## Definition
 
@@ -43,21 +43,22 @@ H_{\mathrm{PE}}
 -\sum_{\pi:p(\pi)>0}p(\pi)\ln p(\pi).
 ```
 
-MPE applies this estimator to the standard coarse-grained series. TSMPE
-applies it to every phase at each time-shift scale and averages the phase
-values.
+MPE applies this estimator to the standard coarse-grained series. RCMPE
+averages ordinal-pattern distributions across composite offsets before
+calculating entropy. TSMPE applies the estimator to every phase at each
+time-shift scale and averages the phase values.
 
 ## Parameter meanings
 
 - `m`: number of samples in each ordinal window. The number of possible
   patterns is $m!$, so larger values need more observations.
 - `tau`: spacing between samples inside a window, measured in samples.
-- `scale`: largest standard multiscale index for MPE.
+- `scale`: largest standard scale for MPE or refined-composite scale for RCMPE.
 - `kmax`: largest time-shift scale for TSMPE.
 
 ## Result
 
-MPE returns `scale` values and TSMPE returns `kmax` values. A larger value
+MPE and RCMPE return `scale` values; TSMPE returns `kmax` values. A larger value
 means the ordinal patterns are more evenly distributed for that method and
 parameter setting. The value is not normalized by $\ln(m!)$.
 

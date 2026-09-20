@@ -2,7 +2,7 @@
 
 English | [简体中文](../zh-CN/algorithms/slope-entropy.md)
 
-Implemented multiscale methods: **MSlopEn** and **TSMSlopEn**.
+Implemented multiscale methods: **MSlopEn**, **RCMSlopEn**, and **TSMSlopEn**.
 
 ## Definition
 
@@ -42,8 +42,10 @@ H_{\mathrm{SlopEn}}
 p(\mathbf{s})\ln p(\mathbf{s}).
 ```
 
-MSlopEn applies this estimator to standard coarse-grained signals.
-TSMSlopEn calculates it for every time-shift phase and averages the values.
+MSlopEn applies this estimator to standard coarse-grained signals. RCMSlopEn
+averages slope-pattern distributions across composite offsets before
+calculating entropy. TSMSlopEn calculates the estimator for every time-shift
+phase and averages the values.
 
 ## Parameter meanings
 
@@ -52,7 +54,7 @@ TSMSlopEn calculates it for every time-shift phase and averages the values.
 - `delta`: lower magnitude threshold. Differences within
   $[-\delta,\delta]$ receive symbol 0.
 - `gamma`: upper magnitude threshold, with $\gamma\ge\delta$.
-- `scale`: largest standard multiscale index for MSlopEn.
+- `scale`: largest standard scale for MSlopEn or refined-composite scale for RCMSlopEn.
 - `kmax`: largest time-shift scale for TSMSlopEn.
 
 `delta` and `gamma` use the units of differences in the preprocessed
@@ -64,7 +66,7 @@ compatibility spelling.
 
 ## Result
 
-MSlopEn returns `scale` values and TSMSlopEn returns `kmax` values. A
+MSlopEn and RCMSlopEn return `scale` values; TSMSlopEn returns `kmax` values. A
 larger value indicates a more even distribution of slope-symbol patterns for
 the selected thresholds and dimension. Values obtained with different
 thresholds should not be treated as the same measurement scale.

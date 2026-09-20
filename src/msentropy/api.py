@@ -3,7 +3,7 @@
 The package exposes two layers:
 
 - ``msentropy.api`` (this module) is the **high-level API**: one registry
-  holds the 15 methods, :func:`compute` normalizes vector orientation, and
+  holds the supported multiscale methods, :func:`compute` normalizes vector orientation, and
   common input mistakes produce readable errors.
 - ``msentropy.core.*`` is the **compatibility API**: it exposes the
   validated numerical implementations directly and retains their documented
@@ -41,11 +41,16 @@ from msentropy.core.cmfude import cmfude
 from msentropy.core.mde import mde
 from msentropy.core.mefude import mefude
 from msentropy.core.mfude import mfude
+from msentropy.core.mfe_mu import mfe_mu
 from msentropy.core.mpe import mpe
 from msentropy.core.mslopen import mslopen
+from msentropy.core.mse_mu import mse_mu
+from msentropy.core.multiscale_attention_entropy import multiscale_attention_entropy
 from msentropy.core.rcmde import rcmde
 from msentropy.core.rcmefude import rcmefude
 from msentropy.core.rcmfude import rcmfude
+from msentropy.core.rcmpe import rcmpe
+from msentropy.core.rcmslopen import rcmslopen
 from msentropy.core.tsmde import tsmde
 from msentropy.core.tsmefude import tsmefude
 from msentropy.core.tsmfude import tsmfude
@@ -110,9 +115,8 @@ class Method:
         return f"{self.name}(x, {', '.join(parts)})"
 
 
-#: The 15 public methods in the order used by the project reference study.
-#: Parameter names are the high-level API names; ``aliases`` records
-#: historical spellings that remain accepted for compatibility.
+#: Supported multiscale methods. The original 15 entries retain their order;
+#: additional toolbox methods are appended to preserve existing iteration order.
 _METHOD_LIST: tuple[Method, ...] = (
     Method(
         name="MPE",
@@ -228,6 +232,42 @@ _METHOD_LIST: tuple[Method, ...] = (
         function=tsmefude,
         parameters=("m", "nc", "tau", "kmax"),
     ),
+    Method(
+        name="MSE",
+        full_name="Multiscale Sample Entropy",
+        module="msentropy.core.mse_mu",
+        function=mse_mu,
+        parameters=("m", "r", "tau", "scale"),
+    ),
+    Method(
+        name="MFE",
+        full_name="Multiscale Fuzzy Entropy",
+        module="msentropy.core.mfe_mu",
+        function=mfe_mu,
+        parameters=("m", "r", "n", "tau", "scale"),
+    ),
+    Method(
+        name="MAttEn",
+        full_name="Multiscale Attention Entropy",
+        module="msentropy.core.multiscale_attention_entropy",
+        function=multiscale_attention_entropy,
+        parameters=("scale",),
+    ),
+    Method(
+        name="RCMPE",
+        full_name="Refined Composite Multiscale Permutation Entropy",
+        module="msentropy.core.rcmpe",
+        function=rcmpe,
+        parameters=("m", "tau", "scale"),
+    ),
+    Method(
+        name="RCMSlopEn",
+        full_name="Refined Composite Multiscale Slope Entropy",
+        module="msentropy.core.rcmslopen",
+        function=rcmslopen,
+        parameters=("m", "delta", "gamma", "scale"),
+        aliases={"gama": "gamma"},
+    ),
 )
 
 #: Canonical name -> :class:`Method`.
@@ -250,7 +290,7 @@ PARAMETERS: dict[str, tuple[str, ...]] = {
 
 
 def list_methods() -> tuple[str, ...]:
-    """Return the 15 paper method names, in the order of the paper table.
+    """Return the registered multiscale method names.
 
     Returns
     -------
@@ -459,6 +499,30 @@ def _validate_parameter_values(
             f"gamma={params['gamma']!r} and delta={params['delta']!r}"
         )
 
+    for name in ("r", "n"):
+        if name not in params:
+            continue
+        value = params[name]
+        if (
+            isinstance(value, (bool, np.bool_))
+            or not isinstance(value, Real)
+            or not np.isfinite(value)
+            or value <= 0
+        ):
+            raise ValueError(
+                f"{method.name}: {name} must be a finite real number > 0, "
+                f"got {value!r}"
+            )
+
+    if (
+        method.name in {"MSlopEn", "TSMSlopEn", "RCMSlopEn"}
+        and params["m"] > 5
+    ):
+        raise ValueError(
+            f"{method.name}: m must be <= 5 for Slope Entropy, "
+            f"got {params['m']!r}"
+        )
+
 
 def _validate_signal_for_call(
     method: Method, signal: np.ndarray, params: Mapping[str, Any]
@@ -475,9 +539,19 @@ def _validate_signal_for_call(
     maximum = params.get("scale", params.get("kmax"))
     if maximum is None:
         return
+    effective_length = signal.size // int(maximum)
+
+    if "m" not in params:
+        if effective_length < 3:
+            raise ValueError(
+                f"{method.name}: scale={maximum} leaves approximately "
+                f"{effective_length} sample(s) at the largest scale; "
+                "Attention Entropy requires at least 3 samples and detectable extrema"
+            )
+        return
+
     m = int(params["m"])
     tau = int(params.get("tau", params.get("t", 1)))
-    effective_length = signal.size // int(maximum)
     span = (m - 1) * tau
     if effective_length <= span:
         label = "scale" if "scale" in params else "kmax"
@@ -490,7 +564,7 @@ def _validate_signal_for_call(
 
 
 def compute(method: str, x: ArrayLike, **params: Any) -> np.ndarray:
-    """Compute one of the 15 paper methods on a signal.
+    """Compute a registered multiscale entropy method on a signal.
 
     Resolves ``method`` in the registry, normalizes ``x`` with
     :func:`as_signal`, checks common input mistakes, and returns the

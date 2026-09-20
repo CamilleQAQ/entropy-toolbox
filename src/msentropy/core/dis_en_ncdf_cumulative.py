@@ -103,7 +103,7 @@ def _entropy_from_y(
         raise NotImplementedError(
             "type > 0 requires cumulativeFunc, which is missing from the "
             "historical references and dies in MATLAB with an undefined-function "
-            "error (the supported entropy branch); only type = 0 "
+            "error; only type = 0 "
             "is implemented"
         )
     else:

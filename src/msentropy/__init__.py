@@ -7,7 +7,7 @@ and ``docs/validation.md`` for validation scope.
 Two layers are available:
 
 - ``msentropy.compute(method, x, **params)`` is the **high-level API**:
-  15 methods behind one keyword-parameter entry point, with vector
+  supported multiscale methods behind one keyword-parameter entry point, with vector
   normalization and checks for common input mistakes.
 - ``msentropy.<method>(x, ...)`` and ``msentropy.core.*`` are the
   **compatibility API**: direct numerical functions retaining documented
@@ -39,11 +39,16 @@ from msentropy.core.cmfude import cmfude
 from msentropy.core.mde import mde
 from msentropy.core.mefude import mefude
 from msentropy.core.mfude import mfude
+from msentropy.core.mfe_mu import mfe_mu
 from msentropy.core.mpe import mpe
 from msentropy.core.mslopen import mslopen
+from msentropy.core.mse_mu import mse_mu
+from msentropy.core.multiscale_attention_entropy import multiscale_attention_entropy
 from msentropy.core.rcmde import rcmde
 from msentropy.core.rcmefude import rcmefude
 from msentropy.core.rcmfude import rcmfude
+from msentropy.core.rcmpe import rcmpe
+from msentropy.core.rcmslopen import rcmslopen
 from msentropy.core.tsmde import tsmde
 from msentropy.core.tsmefude import tsmefude
 from msentropy.core.tsmfude import tsmfude
@@ -64,11 +69,16 @@ __all__ = [
     "mde",
     "mefude",
     "mfude",
+    "mfe_mu",
     "mpe",
     "mslopen",
+    "mse_mu",
+    "multiscale_attention_entropy",
     "rcmde",
     "rcmefude",
     "rcmfude",
+    "rcmpe",
+    "rcmslopen",
     "tsmde",
     "tsmefude",
     "tsmfude",

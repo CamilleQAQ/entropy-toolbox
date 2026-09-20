@@ -19,24 +19,17 @@ def permutation_entropy_forrcmpe(
     if x.ndim != 1 and not (x.ndim == 2 and x.shape[0] == 1):
         raise ValueError(
             "permutation_entropy_forrcmpe: x must be 1-D or a (1, N) row; "
-            "general matrices and (N, 1) columns are not supported "
-            "(MATLAB column input returns an all-NaN histogram through an "
-            "implicit-broadcasting behavior)"
+            "general matrices and (N, 1) columns are not supported"
         )
     if m < 1 or t < 1:
         raise ValueError(
             f"permutation_entropy_forrcmpe: m and t must be >= 1 "
-            f"(got m={m}, t={t}); MATLAB silently returns NaN for m <= 0 "
-            "(the histogram is empty, so 0/0 fills it), which has no "
-            "scientific meaning and is not reproduced"
+            f"(got m={m}, t={t})"
         )
 
     x = x.ravel()
     _, _, c_full = _pattern_counts(x, m, t)
 
-    # MATLAB: p = c/sum(c); p2 = p(p ~= 0); pe = -sum(p2 .* log(p2));
-    # c/sum(c) is 0/0 for every bin when nothing was counted, and the
-    # mask keeps NaN (NaN ~= 0 is true), so pe comes out NaN, not -0.
     total = c_full.sum()
     if total == 0:
         p_full = np.full(c_full.shape, np.nan)

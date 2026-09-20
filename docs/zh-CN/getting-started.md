@@ -63,7 +63,7 @@ Matplotlib 不是工具箱的运行时依赖；需要绘图时请单独安装。
 
 ## 5. 选择其他方法
 
-工具箱注册了 15 种方法：
+工具箱注册了 20 种多尺度方法：
 
 ```python
 print(msentropy.list_methods())
@@ -88,5 +88,5 @@ print(msentropy.get_method("TSMEFuDE").signature)
 ## 后续示例
 
 - [`examples/quickstart.py`](../../examples/quickstart.py) 是上述 MDE 案例的可运行版本。
-- [`examples/all_methods.py`](../../examples/all_methods.py) 使用同一段可复现信号演示全部 15 种方法。
+- [`examples/all_methods.py`](../../examples/all_methods.py) 使用同一段可复现信号演示全部 20 种方法。
 - [参数与数据准备](parameters.md)说明信号长度、预处理、非有限值和有效比较方式。

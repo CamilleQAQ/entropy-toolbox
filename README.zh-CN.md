@@ -3,7 +3,7 @@
 [English](README.md) | 简体中文
 
 `msentropy` 是一个基于 NumPy 和 SciPy 的一维时间序列熵分析工具箱。
-它通过统一的高层接口提供 15 种单尺度或多尺度方法，同时保留可用于
+它通过统一的高层接口提供 20 种多尺度方法，同时保留可用于
 数值复现和深入研究的底层实现。
 
 ## 安装
@@ -56,7 +56,7 @@ print(curve[-1])  # 尺度 20
 以及[算法手册](docs/zh-CN/algorithms/index.md)。
 
 可以直接运行 [`examples/quickstart.py`](examples/quickstart.py) 查看基础示例；
-[`examples/all_methods.py`](examples/all_methods.py) 会运行全部 15 种方法。
+[`examples/all_methods.py`](examples/all_methods.py) 会运行全部 20 种方法。
 
 ## 接口选择
 
@@ -81,6 +81,9 @@ for name in msentropy.list_methods():
 - 散布熵：MDE、RCMDE、TSMDE
 - 模糊散布熵：MFuDE、CMFuDE、RCMFuDE、TSMFuDE
 - 集成模糊散布熵：MEFuDE、CMEFuDE、RCMEFuDE、TSMEFuDE
+- 样本熵与模糊熵：MSE、MFE
+- 注意力熵：MAttEn
+- 其他精细复合方法：RCMPE、RCMSlopEn
 
 这些方法使用普通多尺度、复合多尺度、精细复合多尺度或时间移位多尺度
 构造。具体区别见[方法选择](docs/zh-CN/methods.md)和

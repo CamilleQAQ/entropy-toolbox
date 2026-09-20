@@ -2,7 +2,7 @@
 
 [English](../../algorithms/permutation-entropy.md) | 简体中文
 
-已实现的多尺度方法：**MPE** 和 **TSMPE**。
+已实现的多尺度方法：**MPE**、**RCMPE** 和 **TSMPE**。
 
 ## 定义
 
@@ -35,17 +35,17 @@ H_{\mathrm{PE}}
 -\sum_{\pi:p(\pi)>0}p(\pi)\ln p(\pi).
 ```
 
-MPE 将该估计器应用于标准粗粒化序列。TSMPE 在每个时间移位尺度上对所有相位应用该估计器，并平均各相位结果。
+MPE 将该估计器应用于标准粗粒化序列。RCMPE 先平均各复合偏移的序数模式分布，再计算熵。TSMPE 在每个时间移位尺度上对所有相位应用该估计器，并平均各相位结果。
 
 ## 参数含义
 
 - `m`：每个序数窗口的样本数。可能的模式数为 $m!$，因此更大的值需要更多观测。
 - `tau`：窗口内样本之间的间隔，单位为样本点。
-- `scale`：MPE 的最大标准多尺度尺度。
+- `scale`：MPE 的最大标准尺度，或 RCMPE 的最大精细复合尺度。
 - `kmax`：TSMPE 的最大时间移位尺度。
 
 ## 结果
 
-MPE 返回 `scale` 个值，TSMPE 返回 `kmax` 个值。数值越大，表示在该方法和参数设置下序数模式的分布越均匀。结果未除以 $\ln(m!)$。
+MPE 和 RCMPE 返回 `scale` 个值，TSMPE 返回 `kmax` 个值。数值越大，表示在该方法和参数设置下序数模式的分布越均匀。结果未除以 $\ln(m!)$。
 
 MPE 与 TSMPE 的构造差异见[多尺度构造](multiscale-constructions.md)，来源论文见[英文参考文献列表](../../references.md)。

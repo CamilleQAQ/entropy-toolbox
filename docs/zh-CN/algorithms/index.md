@@ -2,7 +2,7 @@
 
 [English](../../algorithms/index.md) | 简体中文
 
-本手册介绍 `msentropy.compute` 提供的 15 种方法。每个页面采用相同结构：定义、核心步骤、参数含义和结果。
+本手册介绍 `msentropy.compute` 提供的 20 种方法。每个页面采用相同结构：定义、核心步骤、参数含义和结果。
 
 ## 建议阅读顺序
 
@@ -10,6 +10,8 @@
 2. 选择单尺度熵方法族：
    - [排列熵](permutation-entropy.md)
    - [斜率熵](slope-entropy.md)
+   - [样本熵与模糊熵](sample-fuzzy-entropy.md)
+   - [注意力熵](attention-entropy.md)
    - [散布熵](dispersion-entropy.md)
    - [模糊散布熵](fuzzy-dispersion-entropy.md)
    - [集成模糊散布熵](ensemble-fuzzy-dispersion-entropy.md)
@@ -33,6 +35,11 @@
 | TSMDE | 散布熵 | 时间移位 |
 | TSMFuDE | 模糊散布熵 | 时间移位 |
 | TSMEFuDE | 集成模糊散布熵 | 时间移位 |
+| MSE | 样本熵 | 标准 |
+| MFE | 模糊熵 | 标准 |
+| MAttEn | 注意力熵 | 标准 |
+| RCMPE | 排列熵 | 精细复合 |
+| RCMSlopEn | 斜率熵 | 精细复合 |
 
 所有已注册方法都使用自然对数，并且不会除以理论最大值。因此，不能默认不同方法族或不同参数设置下的原始结果处于同一数值尺度。
 

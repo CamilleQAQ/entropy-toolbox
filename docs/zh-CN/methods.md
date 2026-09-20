@@ -8,8 +8,10 @@
 
 | 方法族 | 已注册方法 | 编码内容 | 实际区别 |
 |---|---|---|---|
-| [排列熵](algorithms/permutation-entropy.md) | MPE, TSMPE | 样本之间的相对次序 | 关注序数模式，而不是绝对幅值。 |
-| [斜率熵](algorithms/slope-entropy.md) | MSlopEn, TSMSlopEn | 相邻样本变化的量化类别 | 使用与幅值相关的 `delta` 和 `gamma` 阈值；缩放信号会改变阈值含义。 |
+| [排列熵](algorithms/permutation-entropy.md) | MPE, RCMPE, TSMPE | 样本之间的相对次序 | 关注序数模式，而不是绝对幅值。 |
+| [斜率熵](algorithms/slope-entropy.md) | MSlopEn, RCMSlopEn, TSMSlopEn | 相邻样本变化的量化类别 | 使用与幅值相关的 `delta` 和 `gamma` 阈值；缩放信号会改变阈值含义。 |
+| [样本熵与模糊熵](algorithms/sample-fuzzy-entropy.md) | MSE, MFE | 嵌入模板之间的相似度 | 使用容差 `r`；MFE 通过 `n` 控制的模糊隶属度代替硬匹配。 |
+| [注意力熵](algorithms/attention-entropy.md) | MAttEn | 局部极值之间的间隔 | 每个请求尺度都需要能够检测到极大值和极小值。 |
 | [散布熵](algorithms/dispersion-entropy.md) | MDE, RCMDE, TSMDE | 映射到 `nc` 个离散类别的幅值 | 适合关注幅值分布模式时作为直接起点。 |
 | [模糊散布熵](algorithms/fuzzy-dispersion-entropy.md) | MFuDE, CMFuDE, RCMFuDE, TSMFuDE | 散布模式的模糊隶属度 | 用模糊隶属度代替硬类别边界。 |
 | [集成模糊散布熵](algorithms/ensemble-fuzzy-dispersion-entropy.md) | MEFuDE, CMEFuDE, RCMEFuDE, TSMEFuDE | 多种模糊映射的集成 | 组合多个映射；需要特别留意恒定或近似恒定信号。 |
@@ -30,6 +32,8 @@
 - 需要直接反映幅值模式的多尺度基线时，可从 **MDE** 开始。
 - 关注相对次序而非绝对幅值时，可使用 **MPE**。
 - 希望表示局部变化的符号和幅度类别时，可使用 **MSlopEn**；阈值应按预处理后信号的单位选择。
+- 需要传统多尺度样本熵时使用 **MSE**；希望以平滑的模糊相似度代替硬阈值时使用 **MFE**。
+- 关注局部极值出现时间时使用 **MAttEn**；它不适合单调或几乎没有特征的信号片段。
 - 当研究方法明确要求复合粗粒化时，可考虑 **CM** 或 **RCM** 变体。它们不是标准多尺度方法的数值替代品。
 - 当研究目标采用时间移位多尺度构造时，使用 **TSM** 方法。
 - 复现或扩展本项目论文中的方法时，使用 **TSMEFuDE**。
@@ -55,3 +59,8 @@
 | TSMDE | Time-Shift Multiscale Dispersion Entropy | `m`, `nc`, `tau`, `kmax` |
 | TSMFuDE | Time-Shift Multiscale Fuzzy Dispersion Entropy | `m`, `nc`, `tau`, `kmax` |
 | TSMEFuDE | Time-Shift Multiscale Ensemble Fuzzy Dispersion Entropy | `m`, `nc`, `tau`, `kmax` |
+| MSE | Multiscale Sample Entropy | `m`, `r`, `tau`, `scale` |
+| MFE | Multiscale Fuzzy Entropy | `m`, `r`, `n`, `tau`, `scale` |
+| MAttEn | Multiscale Attention Entropy | `scale` |
+| RCMPE | Refined Composite Multiscale Permutation Entropy | `m`, `tau`, `scale` |
+| RCMSlopEn | Refined Composite Multiscale Slope Entropy | `m`, `delta`, `gamma`, `scale` |

@@ -76,7 +76,7 @@ if a plot is needed.
 
 ## 5. Choose another method
 
-The toolbox registers 15 methods:
+The toolbox registers 20 multiscale methods:
 
 ```python
 print(msentropy.list_methods())
@@ -108,7 +108,7 @@ accept degenerate inputs that the high-level API rejects.
 
 - [`examples/quickstart.py`](../examples/quickstart.py) is the runnable version
   of the basic MDE example.
-- [`examples/all_methods.py`](../examples/all_methods.py) demonstrates all 15
+- [`examples/all_methods.py`](../examples/all_methods.py) demonstrates all 20
   registered methods with one reproducible signal.
 - [Parameters and data preparation](parameters.md) explains signal length,
   preprocessing, non-finite values, and valid comparisons.

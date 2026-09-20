@@ -4,22 +4,20 @@ The numerical code in this distribution was validated during development
 against independently generated reference outputs and targeted edge-case
 experiments.
 
-Before this clean distribution was created, the full validation suite
-reported:
+The broader numerical validation included:
 
 - 1,490 passing pytest cases;
 - 975 reference files;
-- coverage of the 15 registered multiscale methods and their numerical leaves;
+- coverage of the core multiscale method families and their numerical leaves;
 - explicit checks for shapes, NaN/Inf propagation, signed zero, input
   orientation, degenerate windows and floating-point tolerances.
 
-The full research validation collection is not included in the public
-distribution. It contains more than one thousand generated artifacts that are
-unnecessary for installing or using the package.
+The generated reference artifacts are not required for installing or using
+the package.
 
 The compact public test suite focuses on the supported API contract:
 
-- the exact 15-method registry;
+- the complete 20-method multiscale registry;
 - parameter signatures and aliases;
 - bit-identical forwarding between the high-level API and numerical layer
   for valid inputs;

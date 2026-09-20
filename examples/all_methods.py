@@ -1,4 +1,4 @@
-"""Advanced example: run all 15 registered methods on one signal.
+"""Advanced example: run all 20 registered methods on one signal.
 
 Run from the repository root:
 
@@ -30,6 +30,11 @@ PARAMS = {
     "TSMDE": dict(m=3, nc=6, tau=1, kmax=5),
     "TSMFuDE": dict(m=3, nc=6, tau=1, kmax=5),
     "TSMEFuDE": dict(m=3, nc=6, tau=1, kmax=5),
+    "MSE": dict(m=2, r=0.2, tau=1, scale=5),
+    "MFE": dict(m=2, r=0.2, n=2.0, tau=1, scale=5),
+    "MAttEn": dict(scale=5),
+    "RCMPE": dict(m=3, tau=1, scale=5),
+    "RCMSlopEn": dict(m=3, delta=0.1, gamma=1.0, scale=5),
 }
 
 print(f"{'method':10s}  curve")

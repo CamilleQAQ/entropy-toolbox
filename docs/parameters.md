@@ -20,6 +20,8 @@ the [algorithm guide](algorithms/index.md).
 | `kmax` | Largest time-shift scale | Integer, at least 1 | The returned TSM array contains indices `1..kmax`. |
 | `delta` | Lower Slope Entropy threshold | Finite number, at least 0 | It is expressed in the units of differences in the preprocessed signal. |
 | `gamma` | Upper Slope Entropy threshold | Finite number, at least `delta` | The compatibility implementation historically calls this argument `gama`; the high-level API accepts both spellings. |
+| `r` | Similarity tolerance for MSE and MFE | Finite number, greater than 0 | The multiscale implementations standardize the complete input signal before coarse-graining, so `r` is interpreted on that standardized scale. |
+| `n` | Fuzzy membership exponent for MFE | Finite number, greater than 0 | Controls how rapidly fuzzy similarity decreases with template distance. |
 | `type_` | Mapping variant retained by selected fuzzy-dispersion methods | Optional; default `0` | Leave it at the documented default unless reproducing a study that specifies another supported value. |
 
 Values such as `m=3`, `nc=6`, and `tau=1` are common starting examples in this
@@ -40,6 +42,9 @@ still be statistically weak when very few patterns remain.
 The high-level API rejects settings that leave no complete embedding window at
 the largest requested scale. It does not guarantee statistical reliability.
 There is no single reliable minimum length shared by all methods and signals.
+MAttEn has no embedding dimension; it instead requires enough local extrema
+after coarse-graining. A signal can satisfy the length check and still be
+unsuitable if a scale becomes monotone or nearly featureless.
 
 Before fixing a maximum scale:
 

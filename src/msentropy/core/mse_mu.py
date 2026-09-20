@@ -13,7 +13,7 @@ __all__ = ["mse_mu"]
 
 
 def _standardize(x_flat: np.ndarray) -> np.ndarray:
-    """MATLAB ``x = x - mean(x); x = x./std(x);`` on a flattened signal."""
+    """Center and divide by the sample standard deviation."""
     n = x_flat.size
     with np.errstate(invalid="ignore", divide="ignore"):
         if n == 0:
@@ -39,27 +39,19 @@ def mse_mu(
     x_arr = np.asarray(x, dtype=np.float64)
     if x_arr.ndim > 2 or (x_arr.ndim == 2 and 1 not in x_arr.shape):
         raise ValueError(
-            "mse_mu: x must be 1-D (MATLAB row convention) or a "
-            "vector-shaped 2-D array (1xN or Nx1); general matrices are "
-            "not supported. MATLAB would silently linear-index one, but "
-            "every other implemented wrapper rejects the convention instead of "
-            "reproducing it (the supported entropy branch0)"
+            "mse_mu: x must be 1-D or a vector-shaped 2-D array; "
+            "general matrices are not supported"
         )
     scale = _as_integral(scale, "mse_mu: scale")
 
-    # MATLAB indexes the samples element-wise, so the flattened signal is
-    # what every step below consumes; the accepted shapes are all vectors.
     x_flat = x_arr.ravel()
 
-    # MATLAB pre-fills NaN*ones(1, Scale) and then writes index 1 plus
-    # 2:Scale, i.e. every index; for Scale <= 0 the pre-fill is 1-by-0 and
-    # the Out_MSE(1) write grows it to exactly one element.
+    # The direct function retains its established non-positive-scale shape.
     out = np.full(max(scale, 1), np.nan)
 
     x_std = _standardize(x_flat)
 
-    # Scale 1 is a direct leaf call: no coarse graining, and it is evaluated
-    # BEFORE the loop, so a leaf failure fires there first.
+    # Scale 1 uses the standardized signal without coarse-graining.
     out[0] = sampen(x_std, m, r, tau)[0]
 
     for j in range(2, scale + 1):
